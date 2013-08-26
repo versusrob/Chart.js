@@ -1146,15 +1146,15 @@ window.Chart = function(context){
 					var measuredText = ctx.measureText(calculatedScale.labels[i]).width;
 					longestText = (measuredText > longestText)? measuredText : longestText;
 				}
-				//Add a little extra padding from the y axis
-				longestText +=10;
+				//calculate longestText:
+				longestText = Math.max(longestText + 10, (widestXLabel * (rotateLabels == 45 ? 1 / Math.sqrt(2) : 0)));
 			}
-			xAxisLength = width - longestText - widestXLabel;
+			xAxisLength = width - longestText;
 			valueHop = Math.floor(xAxisLength/(data.labels.length));	
 			
 			barWidth = (valueHop - config.scaleGridLineWidth*2 - (config.barValueSpacing*2) - (config.barDatasetSpacing*data.datasets.length-1) - ((config.barStrokeWidth/2)*data.datasets.length-1))/data.datasets.length;
 			
-			yAxisPosX = width-widestXLabel/2-xAxisLength;
+			yAxisPosX = longestText;
 			xAxisPosY = scaleHeight + config.scaleFontSize/2;				
 		}		
 		function calculateDrawingSizes(){
@@ -1168,7 +1168,7 @@ window.Chart = function(context){
 				//If the text length is longer - make that equal to longest text!
 				widestXLabel = (textLength > widestXLabel)? textLength : widestXLabel;
 			}
-			if (width/data.labels.length < widestXLabel){
+			if (width/(data.labels.length + 1) < widestXLabel){
 				rotateLabels = 45;
 				if (width/data.labels.length < Math.cos(rotateLabels) * widestXLabel){
 					rotateLabels = 90;
